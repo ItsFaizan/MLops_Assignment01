@@ -27,7 +27,7 @@ jobs:
         run: |
           python -m unittest
           
-        - name: Merge to master on success
+      - name: Merge to master on success
         if: ${{ success() }}
         run: |
           git config --global user.email "faizanjavid71@gmail.com"
