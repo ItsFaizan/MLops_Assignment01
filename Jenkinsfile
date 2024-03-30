@@ -13,12 +13,12 @@ pipeline {
             steps {
                 script {
                     // Build Docker image
-                    docker.build('your-docker-image:latest')
+                    docker.build('itsfaizan71/mlops_a1:latest')
                     
                     // Authenticate with Docker Hub
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                    docker.withRegistry('', 'docker-hub-credentials') {
                         // Push Docker image to Docker Hub
-                        docker.image('your-docker-image:latest').push('latest')
+                        docker.image('itsfaizan71/mlops_a1:latest').push()
                     }
                 }
             }
