@@ -3,10 +3,12 @@ import pandas as pd
 from flask import Flask, request, jsonify
 from predict import predict_next_week_amounts
 
+
 def json_to_dataframe(input_data):
     # Convert JSON to DataFrame
     df = pd.DataFrame(input_data)
     return df
+
 
 class TestFlaskEndpoint(unittest.TestCase):
     def setUp(self):
@@ -17,7 +19,9 @@ class TestFlaskEndpoint(unittest.TestCase):
         @self.app.route("/predict", methods=["POST"])
         def predict():
             data = request.json
-            input_data = json_to_dataframe(data["input_data"])  # Convert JSON to DataFrame
+            input_data = json_to_dataframe(
+                data["input_data"]
+            )  # Convert JSON to DataFrame
             model_path = data["model_path"]
             predicted_amounts = predict_next_week_amounts(input_data, model_path)
             return jsonify(predicted_amounts.to_dict("records"))
@@ -48,6 +52,7 @@ class TestFlaskEndpoint(unittest.TestCase):
         response_data = response.json
         for entry in response_data:
             self.assertTrue(isinstance(entry["Predicted_Amount_KG"], (int, float)))
+
 
 if __name__ == "__main__":
     unittest.main()
