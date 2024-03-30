@@ -1,6 +1,7 @@
 import unittest
 import pandas as pd
 from flask import Flask, request, jsonify
+from werkzeug.utils import url_quote
 from predict import predict_next_week_amounts
 
 
