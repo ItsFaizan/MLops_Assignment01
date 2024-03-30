@@ -1,6 +1,4 @@
-import os
 import pandas as pd
-import joblib
 from flask import Flask, request, jsonify
 
 # Function to preprocess data
@@ -12,6 +10,7 @@ def convert_units_to_kg(amount, unit):
     else:
         raise ValueError("Unknown unit")
 
+# Function to preprocess data
 def preprocess_data(data):
     # Preprocess the data
     data['Created at'] = pd.to_datetime(data['Created at'])
