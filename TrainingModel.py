@@ -23,7 +23,10 @@ def preprocess_data(data):
     data['Day_of_week'] = data['Created at'].dt.dayofweek
     data['Hour'] = data['Created at'].dt.hour  # New feature: hour of the day
     data['Month'] = data['Created at'].dt.month
-    data['Amount_KG'] = data.apply(lambda row: convert_units_to_kg(row['Amount'], row['Units_of_measure']), axis=1)
+    data['Amount_KG'] = data.apply(
+    lambda row: convert_units_to_kg(row['Amount'], row['Units_of_measure']), 
+    axis=1
+)
 
     # Additional features
     # Historical donation trends: average daily donation
