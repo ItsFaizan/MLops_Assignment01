@@ -1,6 +1,8 @@
-import os
 import pandas as pd
 import joblib
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
 
 
 def convert_units_to_kg(amount, unit):
@@ -76,14 +78,15 @@ def predict_next_week_amounts(input_data, model_path):
     return predictions_df
 
 
-if __name__ == "__main__":
-    # Paths relative to the controller folder
-    input_data_path = os.path.join(os.path.dirname(__file__), "donation_data.xlsx")
-    model_path = os.path.join(
-        os.path.dirname(__file__), "restaurant_donations_model.pkl"
-    )
-
-    # Step 2: Predict total amounts for next week for given restaurants
-    input_data = pd.read_excel(input_data_path)
+@app.route("/predict", methods=["POST"])
+def predict():
+    data = request.json
+    input_data = pd.DataFrame(data["input_data"])
+    model_path = data["model_path"]
     predicted_amounts = predict_next_week_amounts(input_data, model_path)
-    print(predicted_amounts)
+    return jsonify(predicted_amounts.to_dict("records"))
+
+
+if __name__ == "__main__":
+    port = 3001
+    app.run(debug=True, port=port)
