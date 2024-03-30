@@ -14,6 +14,7 @@ def convert_units_to_kg(amount, unit):
     else:
         raise ValueError("Unknown unit")
 
+
 def preprocess_data(data):
     # Preprocess the data
     data['Created at'] = pd.to_datetime(data['Created at'])
@@ -22,19 +23,20 @@ def preprocess_data(data):
     data['Hour'] = data['Created at'].dt.hour  # New feature: hour of the day
     data['Month'] = data['Created at'].dt.month
     data['Amount_KG'] = data.apply(lambda row: convert_units_to_kg(row['Amount'], row['Units_of_measure']), axis=1)
-    
+
     # Additional features
     # Historical donation trends: average daily donation
     avg_daily_donation = data.groupby(['Restaurant Name', 'Day_of_week'])['Amount_KG'].mean().reset_index()
     avg_daily_donation.rename(columns={'Amount_KG': 'Avg_Daily_Donation'}, inplace=True)
     data = pd.merge(data, avg_daily_donation, on=['Restaurant Name', 'Day_of_week'], how='left')
-    
+
     return data
+
 
 def train_model_and_save(data, save_path):
     # Preprocess the data
     data = preprocess_data(data)
-    
+
     # Train-test split
     X = data[['Week', 'Day_of_week', 'Hour', 'Month', 'Avg_Daily_Donation']]
     y = data['Amount_KG']
@@ -51,7 +53,8 @@ def train_model_and_save(data, save_path):
     }
 
     rf = RandomForestRegressor()
-    rf_random = RandomizedSearchCV(estimator=rf, param_distributions=param_grid, n_iter=100, cv=3, verbose=2, random_state=42, n_jobs=-1)
+    rf_random = RandomizedSearchCV(estimator=rf, param_distributions=param_grid, n_iter=100, cv=3, verbose=2,
+                                   random_state=42, n_jobs=-1)
     rf_random.fit(X_train, y_train)
 
     # Best hyperparameters from RandomizedSearchCV
@@ -72,6 +75,7 @@ def train_model_and_save(data, save_path):
 
     # Save the trained model as a pickle file
     joblib.dump(model, save_path)
+
 
 if __name__ == "__main__":
     # Example usage:
